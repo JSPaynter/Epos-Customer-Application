@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.project.jordan.computingprojectcustomerapp.MainActivity"
+    android:padding="10dp">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alcoholic Drinks"
+        android:id="@+id/btnNonAlcoholic"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lblTableNo"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Non Alcoholic Drinks"
+        android:id="@+id/btnAlcoholic"
+        android:layout_below="@+id/btnNonAlcoholic"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Starters"
+        android:id="@+id/btnStarters"
+        android:layout_below="@+id/btnAlcoholic"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:layout_toStartOf="@+id/lstMenu"
+        android:layout_alignLeft="@+id/btnAlcoholic"
+        android:layout_alignRight="@+id/btnAlcoholic"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mains"
+        android:id="@+id/btnMains"
+        android:layout_below="@+id/btnStarters"
+        android:layout_alignRight="@+id/btnStarters"
+        android:layout_alignEnd="@+id/btnStarters"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignLeft="@+id/btnStarters"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Snacks"
+        android:id="@+id/btnSnacks"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnSides"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/btnSides"
+        android:layout_alignLeft="@+id/btnSides"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desserts"
+        android:id="@+id/btnDesserts"
+        android:layout_below="@+id/btnMains"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignLeft="@+id/btnMains"
+        android:layout_alignRight="@+id/btnMains"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:textSize="20dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Staff Options"
+        android:id="@+id/btnStaff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstMenu"
+        android:layout_toRightOf="@+id/btnAlcoholic"
+        android:layout_toLeftOf="@+id/lstOrder"
+        android:layout_alignTop="@+id/btnNonAlcoholic" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnSplitItem"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnSplitPerson"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btnSplitItem"
+        android:layout_toStartOf="@+id/btnSplitItem"
+        android:layout_marginRight="50dp"
+        android:layout_marginEnd="50dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button13"
+        android:layout_above="@+id/btnSplitItem"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnRemove"
+        android:layout_above="@+id/button13"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lstOrder"
+        android:layout_alignLeft="@+id/btnSplitPerson"
+        android:layout_alignStart="@+id/btnSplitPerson"
+        android:layout_alignTop="@+id/lstMenu"
+        android:headerDividersEnabled="false"
+        android:layout_above="@+id/btnRemove" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sides"
+        android:id="@+id/btnSides"
+        android:layout_below="@+id/btnDesserts"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/btnDesserts"
+        android:layout_alignLeft="@+id/btnDesserts"
+        android:layout_toLeftOf="@+id/lstMenu"
+        android:textSize="20dp" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dessert"
+        android:id="@+id/btnToggleDessert"
+        android:layout_below="@+id/btnToggleMain"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textOff="Dessert"
+        android:textOn="Dessert" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Starter"
+        android:id="@+id/btnToggleStarter"
+        android:layout_below="@+id/lblOrderWhen"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textOff="Starter"
+        android:textOn="Starter"
+        android:checked="false" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Main"
+        android:id="@+id/btnToggleMain"
+        android:layout_below="@+id/btnToggleStarter"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textOff="Main"
+        android:textOn="Main" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/btnConfirm"
+        android:layout_above="@+id/btnSplitPerson"
+        android:layout_toRightOf="@+id/lstMenu"
+        android:layout_toEndOf="@+id/lstMenu" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button10"
+        android:layout_alignTop="@+id/btnRemove"
+        android:layout_toRightOf="@+id/lstMenu"
+        android:layout_toEndOf="@+id/lstMenu" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Table No :"
+        android:id="@+id/lblTableNo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="When would you like this Item :"
+        android:id="@+id/lblOrderWhen"
+        android:layout_below="@+id/btnSnacks"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/btnSnacks"
+        android:layout_alignEnd="@+id/btnSnacks" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Your Total :"
+        android:id="@+id/textView2"
+        android:layout_toEndOf="@+id/lstMenu"
+        android:layout_alignLeft="@+id/lstOrder"
+        android:layout_above="@+id/lstOrder" />
+
+</RelativeLayout>
