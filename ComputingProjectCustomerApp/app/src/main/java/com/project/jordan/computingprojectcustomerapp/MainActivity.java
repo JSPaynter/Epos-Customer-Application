@@ -2,6 +2,7 @@ package com.project.jordan.computingprojectcustomerapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     int course = 0;
     Bill currentBill;
     int tableNo = 1111;
+    int index = 0;
 
     String[] staffOptions = new String[4];
     String password = "123";
@@ -54,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     //attributes on page
     ToggleButton btnTogStart, btnTogMain, btnTogDessert;
-    Button btnSplitPerson, btnSplitItem, btnConfirm, btnRemove, btnStaff;
+    Button btnSplitPerson, btnSplitItem, btnConfirm, btnRemove, btnStaff, btnNonAlcoholic, btnAlcoholic,
+        btnStarter, btnMain, btnDessert, btnSide, btnSnack;
     ListView lstOrder;
 
     public MainActivity() {
@@ -66,16 +70,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //set local fields
-        mealView = (ScrollView) findViewById(R.id.scrMeal);
-        orderList = (ListView) findViewById(R.id.lstOrder);
-        txtTotal = (TextView) findViewById(R.id.txtTotal);
-        txtTable = (TextView) findViewById(R.id.lblTableNo);
-        lstOrder = (ListView) findViewById(R.id.lstOrder);
+        setLocalAssets();
 
         new getAllMealList().execute(new APIConnector()); //get meals, sorts in background
-
-        currentBill = new Bill(tableNo); //reset table
-        new addBill().execute(new APIConnector());
 
         //set staff option array list
         staffOptions[0] = "Reset Table";
@@ -91,6 +88,31 @@ public class MainActivity extends AppCompatActivity {
         mealView.addView(layout);
         setTogButtons(false);
         generateButtons(nonAlcoholic);
+        startUpTableSetup();
+    }
+
+    private void startUpTableSetup() {
+        AlertDialog.Builder dialogTableNo = new AlertDialog.Builder(MainActivity.this);
+        dialogTableNo.setTitle("New TableNo");
+        dialogTableNo.setMessage("Please enter a table number.");
+
+        final EditText input = new EditText(MainActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dialogTableNo.setView(input);
+
+        dialogTableNo.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int newTableNo;
+                newTableNo = Integer.parseInt(input.getText().toString());
+                tableNo = newTableNo;
+                currentBill = new Bill(tableNo);
+                setLabelTableNo();
+                Toast.makeText(MainActivity.this, "Table No set", Toast.LENGTH_SHORT).show();
+                new addBill().execute(new APIConnector());
+            }
+        });
+        dialogTableNo.show();
     }
 
     private void setUpListAdapter() {
@@ -122,24 +144,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setListeners() {
-        Button btnNonAlcoholic = (Button) findViewById(R.id.btnNonAlcoholic);
-        Button btnAlcoholic = (Button) findViewById(R.id.btnAlcoholic);
-        Button btnStarter = (Button) findViewById(R.id.btnStarters);
-        Button btnMain = (Button) findViewById(R.id.btnMains);
-        Button btnDessert = (Button) findViewById(R.id.btnDesserts);
-        Button btnSide = (Button) findViewById(R.id.btnSides);
-        Button btnSnack = (Button) findViewById(R.id.btnSnacks);
-
-        btnTogStart = (ToggleButton) findViewById(R.id.btnToggleStarter);
-        btnTogMain = (ToggleButton) findViewById(R.id.btnToggleMain);
-        btnTogDessert = (ToggleButton) findViewById(R.id.btnToggleDessert);
-        btnSplitPerson = (Button) findViewById(R.id.btnSplitPerson);
-        btnSplitItem = (Button) findViewById(R.id.btnSplitItem);
-        btnConfirm = (Button) findViewById(R.id.btnConfirm);
-        btnRemove = (Button) findViewById(R.id.btnRemove);
-        btnStaff = (Button) findViewById(R.id.btnStaff);
-
-
         btnNonAlcoholic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,6 +297,15 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+        btnSplitItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent billSplitActivity = new Intent(MainActivity.this, SplitBill.class);
+                billSplitActivity.putExtra( "currentOrder", currentBill.getBillOrders());
+                billSplitActivity.putExtra( "allMeals", allMeals);
+                startActivity(billSplitActivity);
+            }
+        });
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,10 +323,20 @@ public class MainActivity extends AppCompatActivity {
         btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get index on list
-                //remove from list
-                //remove from new items using total from old list
-                //if index is -1 toast to choose an item
+                int currentItemSize = currentBill.getBillOrders().size()+1;
+                if (index < currentItemSize) {
+                    Toast.makeText(MainActivity.this, "You can only remove new items", Toast.LENGTH_SHORT).show();
+                } else {
+                    double price = 0.00;
+                    for (Meal meal : allMeals)
+                        if (meal.getMealID() == newItems.get(index - currentItemSize).getMealID())
+                            price = meal.getPrice();
+                    currentBill.setTotal(currentBill.getTotal() - price);
+                    setLabelTotal();
+                    newItems.remove(index - currentItemSize);
+                    removeFromOrderList(index);
+                    index = 0;
+                }
             }
         });
         btnStaff.setOnClickListener(new View.OnClickListener() {
@@ -337,88 +360,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         inputText[0] = input.getText().toString();
                         if (inputText[0].equalsIgnoreCase(password)) { //hard coded password set on startup
-
-                            AlertDialog.Builder dialogBox = new AlertDialog.Builder(MainActivity.this);
-                            dialogBox.setTitle("Staff Options");
-                            dialogBox.setItems(staffOptions, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-                                        case 0: //reset table
-                                            currentBill = new Bill(tableNo);
-                                            new addBill().execute(new APIConnector());;
-                                            setLabelTotal();
-                                            orderArray.clear();
-                                            addToOrderList("----------New Items Below ----------");
-                                            generateButtons(nonAlcoholic);
-                                            setTogButtons(false);
-                                            btnTogStart.setSelected(false);
-                                            btnTogMain.setSelected(false);
-                                            btnTogDessert.setSelected(false);
-                                            course = 0;
-                                            break;
-                                        case 1: //change tableNo
-                                            AlertDialog.Builder dialogTableNo = new AlertDialog.Builder(MainActivity.this);
-                                            dialogTableNo.setTitle("New TableNo");
-                                            dialogTableNo.setMessage("Please enter a new table number.");
-
-                                            final EditText input = new EditText(MainActivity.this);
-                                            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                            dialogTableNo.setView(input);
-
-                                            dialogTableNo.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    int newTableNo;
-                                                    newTableNo = Integer.parseInt(input.getText().toString());
-                                                    tableNo = newTableNo;
-                                                    currentBill.setTableNo(newTableNo);
-                                                    setLabelTableNo();
-                                                    new updateTableNo().execute(new APIConnector());
-                                                    Toast.makeText(MainActivity.this, "Table No changed", Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-                                            dialogTableNo.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            dialogTableNo.show();
-                                            break;
-                                        case 2: //change password
-                                            AlertDialog.Builder dialogPassword = new AlertDialog.Builder(MainActivity.this);
-                                            dialogPassword.setTitle("New Password");
-                                            dialogPassword.setMessage("Please enter a new numerical password.");
-
-                                            final EditText newPassword = new EditText(MainActivity.this);
-                                            newPassword.setInputType(InputType.TYPE_CLASS_NUMBER);
-                                            dialogPassword.setView(newPassword);
-
-                                            dialogPassword.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    password = newPassword.getText().toString();
-                                                    Toast.makeText(MainActivity.this, "Password Changed", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                            dialogPassword.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            dialogPassword.show();
-
-                                            break;
-                                        case 3: // shutdown
-                                            android.os.Process.killProcess(Process.myPid());
-                                            System.exit(1);
-                                            break;
-                                    }
-                                }
-                            });
-                            dialogBox.show();
+                            staffDialogOptions();
                         } else {
                             Toast.makeText(MainActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                         }
@@ -433,6 +375,132 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+        lstOrder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                index = position;
+            }
+        });
+    }
+
+    private void setLocalAssets() {
+        mealView = (ScrollView) findViewById(R.id.scrMeal);
+        orderList = (ListView) findViewById(R.id.lstOrder);
+        txtTotal = (TextView) findViewById(R.id.txtTotal);
+        txtTable = (TextView) findViewById(R.id.lblTableNo);
+        lstOrder = (ListView) findViewById(R.id.lstOrder);
+
+        btnNonAlcoholic = (Button) findViewById(R.id.btnNonAlcoholic);
+        btnAlcoholic = (Button) findViewById(R.id.btnAlcoholic);
+        btnStarter = (Button) findViewById(R.id.btnStarters);
+        btnMain = (Button) findViewById(R.id.btnMains);
+        btnDessert = (Button) findViewById(R.id.btnDesserts);
+        btnSide = (Button) findViewById(R.id.btnSides);
+        btnSnack = (Button) findViewById(R.id.btnSnacks);
+
+        btnTogStart = (ToggleButton) findViewById(R.id.btnToggleStarter);
+        btnTogMain = (ToggleButton) findViewById(R.id.btnToggleMain);
+        btnTogDessert = (ToggleButton) findViewById(R.id.btnToggleDessert);
+        btnSplitPerson = (Button) findViewById(R.id.btnSplitPerson);
+        btnSplitItem = (Button) findViewById(R.id.btnSplitItem);
+        btnConfirm = (Button) findViewById(R.id.btnConfirm);
+        btnRemove = (Button) findViewById(R.id.btnRemove);
+        btnStaff = (Button) findViewById(R.id.btnStaff);
+    }
+
+    private void staffDialogOptions() {
+        AlertDialog.Builder dialogBox = new AlertDialog.Builder(MainActivity.this);
+        dialogBox.setTitle("Staff Options");
+        dialogBox.setItems(staffOptions, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: //reset table
+                        staffResetTable();
+                        break;
+                    case 1: //change tableNo
+                        staffChangeTableNo();
+                        break;
+                    case 2: //change password
+                        staffChangePassword();
+                        break;
+                    case 3: // shutdown
+                        android.os.Process.killProcess(Process.myPid());
+                        System.exit(1);
+                        break;
+                }
+            }
+        });
+        dialogBox.show();
+    }
+
+    private void staffChangePassword() {
+        AlertDialog.Builder dialogPassword = new AlertDialog.Builder(MainActivity.this);
+        dialogPassword.setTitle("New Password");
+        dialogPassword.setMessage("Please enter a new numerical password.");
+
+        final EditText newPassword = new EditText(MainActivity.this);
+        newPassword.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dialogPassword.setView(newPassword);
+
+        dialogPassword.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                password = newPassword.getText().toString();
+                Toast.makeText(MainActivity.this, "Password Changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialogPassword.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialogPassword.show();
+    }
+
+    private void staffChangeTableNo() {
+        AlertDialog.Builder dialogTableNo = new AlertDialog.Builder(MainActivity.this);
+        dialogTableNo.setTitle("New TableNo");
+        dialogTableNo.setMessage("Please enter a new table number.");
+
+        final EditText input = new EditText(MainActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dialogTableNo.setView(input);
+
+        dialogTableNo.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int newTableNo;
+                newTableNo = Integer.parseInt(input.getText().toString());
+                tableNo = newTableNo;
+                currentBill.setTableNo(newTableNo);
+                setLabelTableNo();
+                new updateTableNo().execute(new APIConnector());
+                Toast.makeText(MainActivity.this, "Table No changed", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        dialogTableNo.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialogTableNo.show();
+    }
+
+    private void staffResetTable() {
+        currentBill = new Bill(tableNo);
+        new addBill().execute(new APIConnector());
+        setLabelTotal();
+        orderArray.clear();
+        addToOrderList("----------New Items Below ----------");
+        generateButtons(nonAlcoholic);
+        setTogButtons(false);
+        btnTogStart.setSelected(false);
+        btnTogMain.setSelected(false);
+        btnTogDessert.setSelected(false);
+        course = 0;
     }
 
     private void setTogButtons(Boolean onOff) {
@@ -632,6 +700,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void addToOrderList(String order) {
         orderArray.add(order);
+        orderAdapter.notifyDataSetChanged();
+    }
+    private void removeFromOrderList(int index) {
+        orderArray.remove(index);
         orderAdapter.notifyDataSetChanged();
     }
 }

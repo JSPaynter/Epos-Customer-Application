@@ -1,6 +1,9 @@
 package com.project.jordan.computingprojectcustomerapp;
 
-public class BillOrder {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class BillOrder implements Parcelable{
 
     private int itemID, billID, mealID, complete, course;
 
@@ -16,6 +19,40 @@ public class BillOrder {
         this.mealID = mealID;
         this.complete = complete;
         this.course = course;
+    }
+
+    protected BillOrder(Parcel in) {
+        itemID = in.readInt();
+        billID = in.readInt();
+        mealID = in.readInt();
+        complete = in.readInt();
+        course = in.readInt();
+    }
+
+    public static final Creator<BillOrder> CREATOR = new Creator<BillOrder>() {
+        @Override
+        public BillOrder createFromParcel(Parcel in) {
+            return new BillOrder(in);
+        }
+
+        @Override
+        public BillOrder[] newArray(int size) {
+            return new BillOrder[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(itemID);
+        dest.writeInt(billID);
+        dest.writeInt(mealID);
+        dest.writeInt(complete);
+        dest.writeInt(course);
     }
 
     public int getItemID() {

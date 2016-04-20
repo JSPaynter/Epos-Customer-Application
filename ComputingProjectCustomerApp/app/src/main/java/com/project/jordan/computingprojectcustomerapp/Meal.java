@@ -1,6 +1,9 @@
 package com.project.jordan.computingprojectcustomerapp;
 
-public class Meal {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Meal implements Parcelable{
 
         private int mealID, mealTypeID, menu;
         private String name, description;
@@ -23,7 +26,43 @@ public class Meal {
             this.price = price;
         }
 
-        public int getMealID() {
+    protected Meal(Parcel in) {
+        mealID = in.readInt();
+        mealTypeID = in.readInt();
+        menu = in.readInt();
+        name = in.readString();
+        description = in.readString();
+        price = in.readDouble();
+    }
+
+    public static final Creator<Meal> CREATOR = new Creator<Meal>() {
+        @Override
+        public Meal createFromParcel(Parcel in) {
+            return new Meal(in);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mealID);
+        dest.writeInt(mealTypeID);
+        dest.writeInt(menu);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeDouble(price);
+    }
+
+    public int getMealID() {
             return mealID;
         }
         public void setMealID(int mealID) {
