@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(nonAlcoholic);
                 setTogButtons(false);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(false);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(false);
+                btnTogDessert.setChecked(false);
                 course = 0;
             }
         });
@@ -160,9 +160,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(alcoholic);
                 setTogButtons(false);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(false);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(false);
+                btnTogDessert.setChecked(false);
                 course = 0;
             }
         });
@@ -171,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(starter);
                 setTogButtons(true);
-                btnTogStart.setSelected(true);
-                btnTogMain.setSelected(false);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(true);
+                btnTogMain.setChecked(false);
+                btnTogDessert.setChecked(false);
                 course = 1;
             }
         });
@@ -183,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
                 generateButtons(main);
                 setTogButtons(false);
                 btnTogMain.setEnabled(true);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(true);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(true);
+                btnTogDessert.setChecked(false);
                 course = 2;
             }
         });
@@ -194,9 +194,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(dessert);
                 setTogButtons(true);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(false);
-                btnTogDessert.setSelected(true);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(false);
+                btnTogDessert.setChecked(true);
                 course = 3;
             }
         });
@@ -205,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(side);
                 setTogButtons(true);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(true);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(true);
+                btnTogDessert.setChecked(false);
                 if (course == 0)
                     course = 2;
             }
@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 generateButtons(snack);
                 setTogButtons(true);
-                btnTogStart.setSelected(false);
-                btnTogMain.setSelected(true);
-                btnTogDessert.setSelected(false);
+                btnTogStart.setChecked(false);
+                btnTogMain.setChecked(true);
+                btnTogDessert.setChecked(false);
                 if (course == 0)
                     course = 2;
             }
@@ -228,34 +228,34 @@ public class MainActivity extends AppCompatActivity {
         btnTogStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!btnTogStart.isSelected()) {
-                    btnTogMain.setSelected(false);
-                    btnTogDessert.setSelected(false);
-                    course = 1;
-                } else
-                    btnTogStart.setSelected(true);
+            if (btnTogStart.isChecked()) {
+                btnTogMain.setChecked(false);
+                btnTogDessert.setChecked(false);
+                course = 1;
+            } else
+                btnTogStart.setChecked(true);
             }
         });
         btnTogMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!btnTogMain.isSelected()) {
-                    btnTogStart.setSelected(false);
-                    btnTogDessert.setSelected(false);
+                if (btnTogMain.isChecked()) {
+                    btnTogStart.setChecked(false);
+                    btnTogDessert.setChecked(false);
                     course = 2;
                 } else
-                    btnTogMain.setSelected(true);
+                    btnTogMain.setChecked(true);
             }
         });
         btnTogDessert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!btnTogDessert.isSelected()) {
-                    btnTogStart.setSelected(false);
-                    btnTogMain.setSelected(false);
+                if (btnTogDessert.isChecked()) {
+                    btnTogStart.setChecked(false);
+                    btnTogMain.setChecked(false);
                     course = 3;
                 } else
-                    btnTogDessert.setSelected(true);
+                    btnTogDessert.setChecked(true);
             }
         });
         btnSplitPerson.setOnClickListener(new View.OnClickListener() {
@@ -497,9 +497,9 @@ public class MainActivity extends AppCompatActivity {
         addToOrderList("----------New Items Below ----------");
         generateButtons(nonAlcoholic);
         setTogButtons(false);
-        btnTogStart.setSelected(false);
-        btnTogMain.setSelected(false);
-        btnTogDessert.setSelected(false);
+        btnTogStart.setChecked(false);
+        btnTogMain.setChecked(false);
+        btnTogDessert.setChecked(false);
         course = 0;
     }
 
